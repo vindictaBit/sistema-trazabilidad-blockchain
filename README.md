@@ -1,6 +1,7 @@
 # Sistema de Trazabilidad Farmacéutica - DApp Blockchain
 
-Plataforma descentralizada de certificación y trazabilidad de medicamentos desarrollada para hackathon.
+Plataforma descentralizada de certificación y trazabilidad de medicamentos desarrollada.
+
 Despliegue: https://sistema-trazabilidad-blockchain.vercel.app/
 
 ## Stack Tecnológico
@@ -76,7 +77,7 @@ CREATE INDEX idx_lotes_hash ON lotes(hash_calculado);
 
 ### 4. Deployment del Smart Contract
 
-#### Opción A: Remix IDE (Recomendado para Hackathon)
+#### Remix IDE
 
 1. Ve a [Remix IDE](https://remix.ethereum.org/)
 2. Crea un nuevo archivo `Trazabilidad.sol`
@@ -88,10 +89,6 @@ CREATE INDEX idx_lotes_hash ON lotes(hash_calculado);
    - Deploy el contrato
 6. Copia la dirección del contrato y pégala en `.env.local`
 
-#### Opción B: Usar Hardhat/Foundry
-
-(Documentación completa en `/docs/deployment.md`)
-
 ## Ejecución del Proyecto
 
 ### Modo Desarrollo
@@ -100,7 +97,7 @@ CREATE INDEX idx_lotes_hash ON lotes(hash_calculado);
 npm run dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+Abre [http://localhost:3000](http://localhost:3000) en el navegador.
 
 ### Modo Producción
 
@@ -268,8 +265,6 @@ Solicitar ETH testnet:
 - [Supabase Documentation](https://supabase.com/docs)
 - [Next.js Documentation](https://nextjs.org/docs)
 
-## Presentación Hackathon
-
 ### Características Implementadas
 
 1. **Integración Blockchain:** Smart contract desplegado en Scroll Sepolia
@@ -278,14 +273,6 @@ Solicitar ETH testnet:
 4. **Arquitectura Híbrida:** Datos en Supabase + hash inmutable en blockchain
 5. **Procesamiento IoT:** Captura de códigos QR simulando sensores
 6. **Solución End-to-End:** Flujo completo de certificación funcional
-
-### Roadmap Post-Hackathon
-
-- Integración con dispositivos IoT físicos
-- Panel de administración y analytics
-- Sistema de notificaciones en tiempo real
-- Soporte multi-chain
-- APIs para integración con sistemas farmacéuticos
 
 ## Licencia
 
@@ -296,5 +283,3 @@ MIT License
 Sistema de Trazabilidad Blockchain - Hackathon 2025
 
 ---
-
-Documentación técnica completa disponible en el repositorio
