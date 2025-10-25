@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Códigos QR - Sistema de Trazabilidad</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        button {
+            background: #0070f3;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0051cc;
+        }
+        .btn-secondary {
+            background: #666;
+        }
+        .btn-secondary:hover {
+            background: #444;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        #qrcode {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .examples {
+            margin: 20px 0;
+        }
+        .example-btn {
+            background: #17a2b8;
+            margin: 5px;
+        }
+        .example-btn:hover {
+            background: #138496;
+        }
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Códigos QR</h1>
+        <h3>Sistema de Trazabilidad Farmacéutica</h3>
+
+        <div class="instructions">
+            <strong>Instrucciones de Uso:</strong>
+            <ol>
+                <li>Seleccione un template predefinido o ingrese datos personalizados en formato JSON</li>
+                <li>Presione "Generar Código QR"</li>
+                <li>Descargue la imagen generada mediante clic derecho o botón de descarga</li>
+                <li>Cargue la imagen en la aplicación usando la opción "Cargar Imagen"</li>
+            </ol>
+        </div>
+
+        <div class="examples">
+            <strong>Templates Disponibles:</strong><br>
+            <button class="example-btn" onclick="loadExample1()">Paracetamol (Válido)</button>
+            <button class="example-btn" onclick="loadExample2()">Antibiótico (Válido)</button>
+            <button class="example-btn" onclick="loadExample3()">Producto Falso (Test Error)</button>
+            <button class="example-btn" onclick="loadExample4()">Producto Vencido (Test Error)</button>
+        </div>
+
+        <textarea id="jsonInput" placeholder='Ingrese estructura JSON aquí...'></textarea>
+
+        <div style="text-align: center;">
+            <button onclick="generateQR()">Generar Código QR</button>
+            <button class="btn-secondary" onclick="clearQR()">Limpiar</button>
+        </div>
+
+        <div id="qrcode"></div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn-success" onclick="downloadQR()">Descargar Imagen</button>
+        </div>
+    </div>
+
+    <script>
+        let qrCodeInstance = null;
+
+        // Ejemplos de JSON
+        function loadExample1() {
+            document.getElementById('jsonInput').value = JSON.stringify({
+                "lote": "LOT-2025-001",
+                "producto": "Paracetamol 500mg",
+                "fabricante": "Farmacia XYZ S.A.",
+                "fecha_fabricacion": "2025-01-15",
+                "fecha_vencimiento": "2027-01-15",
+                "cantidad": 1000,
+                "ubicacion": "Almacén Central",
+                "responsable": "Dr. Juan Pérez"
+            }, null, 2);
+        }
+
+        function loadExample2() {
+            document.getElementById('jsonInput').value = JSON.stringify({
+                "id": "MED-AB-2025-002",
+                "lote": "LOT-AB-002",
+                "producto": "Amoxicilina 500mg",
+                "fabricante": "Laboratorios Beta",
+                "fecha_fabricacion": "2025-01-10",
+                "fecha_vencimiento": "2026-06-10",
+                "cantidad": 500,
+                "temperatura_almacenamiento": "15-25°C",
+                "ubicacion": "Bodega 3, Estante A5",
+                "registro_sanitario": "INVIMA-2024-0001234"
+            }, null, 2);
+        }
+
+        function loadExample3() {
+            document.getElementById('jsonInput').value = JSON.stringify({
+                "lote": "SOSPECHOSO-001",
+                "producto": "PRODUCTO_FALSO",
+                "fabricante": "Desconocido",
+                "origen": "No verificado"
+            }, null, 2);
+        }
+
+        function loadExample4() {
+            document.getElementById('jsonInput').value = JSON.stringify({
+                "lote": "LOT-VENC-001",
+                "producto": "Medicina VENCIDA",
+                "estado": "EXPIRADO",
+                "fecha_vencimiento": "2020-01-01"
+            }, null, 2);
+        }
+
+        function generateQR() {
+            const jsonText = document.getElementById('jsonInput').value;
+            
+            if (!jsonText.trim()) {
+                alert('Error: Debe ingresar datos en formato JSON válido');
+                return;
+            }
+
+            try {
+                // Validar estructura JSON
+                JSON.parse(jsonText);
+            } catch (e) {
+                alert('Error de formato JSON: ' + e.message);
+                return;
+            }
+
+            // Limpiar código previo
+            clearQR();
+
+            // Generar código QR
+            qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
+                text: jsonText,
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function clearQR() {
+            document.getElementById('qrcode').innerHTML = '';
+            qrCodeInstance = null;
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) {
+                alert('Error: Primero debe generar un código QR');
+                return;
+            }
+
+            const url = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.download = 'qr-trazabilidad-medicamento.png';
+            a.href = url;
+            a.click();
+        }
+
+        // Cargar template por defecto al iniciar
+        window.onload = function() {
+            loadExample1();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+{
+  "contractName": "Trazabilidad",
+  "description": "Smart Contract para sellar hashes de trazabilidad de medicamentos de forma inmutable en Scroll Sepolia",
+  "network": "Scroll Sepolia Testnet",
+  "chainId": 534351,
+  "compiler": {
+    "version": "0.8.20",
+    "optimization": true,
+    "runs": 200
+  },
+  "mainFunctions": [
+    {
+      "name": "sellarHash",
+      "type": "function",
+      "description": "Sella un hash SHA-256 en la blockchain",
+      "params": [
+        {
+          "name": "_hash",
+          "type": "string",
+          "description": "Hash SHA-256 del JSON del lote de medicamentos"
+        }
+      ],
+      "returns": [],
+      "visibility": "public",
+      "stateMutability": "nonpayable",
+      "emits": ["HashSellado"]
+    },
+    {
+      "name": "verificarHash",
+      "type": "function",
+      "description": "Verifica si un hash fue sellado previamente",
+      "params": [
+        {
+          "name": "_hash",
+          "type": "string",
+          "description": "Hash a verificar"
+        }
+      ],
+      "returns": [
+        {
+          "type": "bool",
+          "description": "True si el hash existe, False si no"
+        }
+      ],
+      "visibility": "public",
+      "stateMutability": "view"
+    },
+    {
+      "name": "obtenerDetallesHash",
+      "type": "function",
+      "description": "Obtiene los detalles completos de un hash sellado",
+      "params": [
+        {
+          "name": "_hash",
+          "type": "string",
+          "description": "Hash a consultar"
+        }
+      ],
+      "returns": [
+        {
+          "name": "emisor",
+          "type": "address",
+          "description": "Dirección que selló el hash"
+        },
+        {
+          "name": "hash",
+          "type": "string",
+          "description": "El hash sellado"
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "description": "Timestamp del sellado"
+        }
+      ],
+      "visibility": "public",
+      "stateMutability": "view"
+    }
+  ],
+  "events": [
+    {
+      "name": "HashSellado",
+      "description": "Emitido cuando se sella un nuevo hash",
+      "params": [
+        {
+          "name": "emisor",
+          "type": "address",
+          "indexed": true,
+          "description": "Dirección que selló el hash"
+        },
+        {
+          "name": "hash",
+          "type": "string",
+          "indexed": false,
+          "description": "Hash sellado"
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false,
+          "description": "Timestamp del evento"
+        }
+      ]
+    }
+  ],
+  "deployment": {
+    "remix": {
+      "steps": [
+        "1. Abrir Remix IDE (https://remix.ethereum.org/)",
+        "2. Crear archivo Trazabilidad.sol",
+        "3. Compilar con Solidity 0.8.20+",
+        "4. Conectar Metamask a Scroll Sepolia",
+        "5. Deploy usando Injected Provider",
+        "6. Copiar dirección del contrato"
+      ]
+    },
+    "hardhat": {
+      "command": "npx hardhat run scripts/deploy.js --network scrollSepolia",
+      "config": "Ver hardhat.config.js"
+    }
+  },
+  "gasEstimates": {
+    "sellarHash": "~100,000 - 150,000 gas",
+    "verificarHash": "~30,000 gas (read-only)",
+    "obtenerDetallesHash": "~35,000 gas (read-only)"
+  },
+  "securityConsiderations": [
+    "El contrato no permite sellar el mismo hash dos veces",
+    "Solo el emisor original tiene su dirección registrada con el hash",
+    "Los hashes son inmutables una vez sellados",
+    "No hay función para eliminar o modificar hashes (immutability)"
+  ]
+}
