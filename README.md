@@ -1,6 +1,7 @@
 # Sistema de Trazabilidad Farmacéutica - DApp Blockchain
 
 Plataforma descentralizada de certificación y trazabilidad de medicamentos desarrollada para hackathon.
+Despliegue: https://sistema-trazabilidad-blockchain.vercel.app/
 
 ## Stack Tecnológico
 
