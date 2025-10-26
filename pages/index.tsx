@@ -345,7 +345,7 @@ export default function Home() {
   // Renderizar estado visual
   const renderStatus = () => {
     const statusConfig = {
-      'idle': { color: 'bg-gray-500', text: 'Sistema listo', icon: '●' },
+      'idle': { color: 'bg-gray-500', text: 'Sistema listo', icon: '' },
       'scanning': { color: 'bg-blue-500 animate-pulse', text: 'Escaneando código QR', icon: '◐' },
       'qr-detected': { color: 'bg-green-500', text: 'Código QR detectado', icon: '✓' },
       'certifying-db': { color: 'bg-yellow-500 animate-pulse', text: 'Validando datos y registrando', icon: '⟳' },
@@ -367,7 +367,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Sistema de Trazabilidad Farmacéutica</title>
+        <title>TraceSecure</title>
         <meta name="description" content="Plataforma blockchain para certificación de medicamentos" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -376,7 +376,7 @@ export default function Home() {
         <div className="container-main">
           {/* Header con diseño mejorado */}
           <div className="text-center mb-12 animate-fade-in">
-            <h1 className="page-title">Sistema de Trazabilidad Farmacéutica</h1>
+            <h1 className="page-title">TraceSecure</h1>
             <p className="page-subtitle">Plataforma de Certificación Blockchain para Medicamentos</p>
             <div className="mt-4 inline-flex items-center gap-2 text-sm text-gray-500">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -638,12 +638,12 @@ export default function Home() {
           {/* Footer */}
           <div className="divider"></div>
           <div className="footer-text space-y-2">
-            <p className="font-semibold">Tecnologías: 
-              • Next.js\<br />
-              • Wagmi\<br />
-              • Scroll Sepolia\<br />
+            <p className="font-semibold">Tecnologías:<br />
+              • Next.js<br />
+              • Wagmi<br />
+              • Scroll Sepolia<br />
               • Supabase</p>
-            <p>Sistema de Trazabilidad Blockchain - Hackathon 2025</p>
+            <p>TraceSecure - Hackathon 2025</p>
           </div>
         </div>
       </main>
