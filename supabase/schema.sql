@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS public.lotes (
     hash_calculado TEXT,
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     estado TEXT DEFAULT 'certificado',
-    blockchain_tx_hash TEXT,
+    tx_hash TEXT,
+    blockchain_timestamp TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -15,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.lotes (
 CREATE INDEX IF NOT EXISTS idx_lotes_hash ON public.lotes(hash_calculado);
 CREATE INDEX IF NOT EXISTS idx_lotes_timestamp ON public.lotes(timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_lotes_estado ON public.lotes(estado);
-CREATE INDEX IF NOT EXISTS idx_lotes_blockchain_tx ON public.lotes(blockchain_tx_hash);
+CREATE INDEX IF NOT EXISTS idx_lotes_tx_hash ON public.lotes(tx_hash);
 
 -- Índice GIN para búsquedas en el JSONB
 CREATE INDEX IF NOT EXISTS idx_lotes_datos_qr_gin ON public.lotes USING GIN (datos_qr);
@@ -34,17 +35,15 @@ CREATE TRIGGER update_lotes_updated_at
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
 
--- Política de seguridad RLS (Row Level Security) - Opcional
--- ALTER TABLE public.lotes ENABLE ROW LEVEL SECURITY;
-
 -- Comentarios para documentación
 COMMENT ON TABLE public.lotes IS 'Almacena los registros de lotes de medicamentos certificados';
 COMMENT ON COLUMN public.lotes.datos_qr IS 'Datos completos del QR en formato JSON';
 COMMENT ON COLUMN public.lotes.datos_qr_string IS 'Datos del QR como string (para calcular hash)';
 COMMENT ON COLUMN public.lotes.hash_calculado IS 'Hash SHA-256 calculado de los datos del QR';
 COMMENT ON COLUMN public.lotes.timestamp IS 'Momento en que se certificó el lote';
-COMMENT ON COLUMN public.lotes.estado IS 'Estado del lote: certificado, sellado, rechazado, etc.';
-COMMENT ON COLUMN public.lotes.blockchain_tx_hash IS 'Hash de la transacción en blockchain (opcional)';
+COMMENT ON COLUMN public.lotes.estado IS 'Estado del lote: pendiente, certificado, rechazado';
+COMMENT ON COLUMN public.lotes.tx_hash IS 'Hash de transacción en Scroll Sepolia';
+COMMENT ON COLUMN public.lotes.blockchain_timestamp IS 'Timestamp cuando se confirmó en blockchain';
 
 -- Vista para consultas comunes
 CREATE OR REPLACE VIEW public.lotes_recientes AS
@@ -56,7 +55,8 @@ SELECT
     hash_calculado,
     estado,
     timestamp,
-    blockchain_tx_hash
+    tx_hash,
+    blockchain_timestamp
 FROM public.lotes
 ORDER BY timestamp DESC
 LIMIT 100;
