@@ -638,7 +638,11 @@ export default function Home() {
           {/* Footer */}
           <div className="divider"></div>
           <div className="footer-text space-y-2">
-            <p className="font-semibold">Tecnología: Next.js • Wagmi • Scroll Sepolia • Supabase</p>
+            <p className="font-semibold">Tecnologías: 
+              • Next.js\<br />
+              • Wagmi\<br />
+              • Scroll Sepolia\<br />
+              • Supabase</p>
             <p>Sistema de Trazabilidad Blockchain - Hackathon 2025</p>
           </div>
         </div>
